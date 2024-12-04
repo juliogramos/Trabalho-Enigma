@@ -91,3 +91,44 @@ try {
 } catch (error) {
     console.error(error.message);
 }
+
+// HTML do navegador
+let lastInputLength = 0;
+const input = document.getElementById("msg_input");
+input.addEventListener("input", function(e) {
+    lastInputLength = input.value.length;
+    let lastChar = input.value.slice(-1);
+    let newLetter;
+    if (alphabet.includes(lastChar.toUpperCase())) {
+        newLetter = encryptLetter(lastChar.toUpperCase());
+    }
+    updateLampboard(newLetter);
+});
+
+function updateLampboard(char) {
+    for (let letter of alphabet) {
+        if (letter == char) {
+            let lampOn = document.getElementById(char);
+            lampOn.style.backgroundColor = "#ffffe0";
+            lampOn.style.color = "#000000";
+        } else {
+            let lampOff = document.getElementById(letter);
+            lampOff.style.backgroundColor = "#000000";
+            lampOff.style.color = "#ffffff";
+        }
+    }
+}
+
+//Fazer
+function encryptButton() {
+    // Resetar as rotações dos rotores aqui pois o input vai modificar elas
+    //  quando digitar uma letra
+    alert("Clicou");
+}
+
+// Vai trabalhar só com letras maiúsculas
+// Assume que as letras passadas pra ela são maiúsculas (e letras)
+function encryptLetter(char) {
+    // Implementar certo
+    return char;
+}

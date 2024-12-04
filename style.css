@@ -1,0 +1,38 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#main {
+    margin: 0 auto;
+    background-color: antiquewhite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 1em;
+    gap: 1em;
+    max-width: 50%;
+}
+
+hr {
+    border: 1px solid black;
+    width: 100%;
+}
+
+#lampboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: center;
+}
+
+#lampboard > * {
+    border: 2px solid black;
+    padding: 0.5em;
+    background-color: black;
+    color: white;
+    width: 2em;
+    text-align: center;
+}
