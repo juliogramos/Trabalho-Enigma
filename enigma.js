@@ -124,11 +124,32 @@ function encryptButton() {
     // Resetar as rotações dos rotores aqui pois o input vai modificar elas
     //  quando digitar uma letra
     alert("Clicou");
+
+    const input = document.getElementById("msg_input").value.toUpperCase();
+    const output = [];
+
+    for (const char of input) {
+	    if (alphabet.includes(char)) {
+		    const encryptedChar = encryptLetter(char);
+		    output.push(encryptedChar);
+	    } else {
+		    output.push(char); //A gente precisa ver aqui como vamos fazer com a questão de espaços e outros char que nao estao no alfabeto como pontuação
+	    }
+    }
+
+    const encryptedMessage = output.join("");
+ document.getElementById("cifrada").textContent = encryptedMessage;
+    const outputElement = document.getElementById("output");
+    if (outputElement) {
+	    outputElement.textContent = encryptedMessage;
+    } else {
+	    console.log("Mensagem cifrada: ", encryptedMessage);
+    }
 }
 
 // Vai trabalhar só com letras maiúsculas
 // Assume que as letras passadas pra ela são maiúsculas (e letras)
 function encryptLetter(char) {
-    // Implementar certo
+	// Implementar certo
     return char;
 }
