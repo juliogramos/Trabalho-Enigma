@@ -13,7 +13,7 @@
     flex-direction: column;
     padding: 1em;
     gap: 1em;
-    max-width: 50%;
+    max-width: 60%;
 }
 
 hr {
@@ -21,7 +21,7 @@ hr {
     width: 100%;
 }
 
-#lampboard, #plugboard {
+#lampboard, .selector {
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
@@ -37,7 +37,7 @@ hr {
     text-align: center;
 }
 
-#plugboard > * {
+.selector > * {
     border: 5px solid black;
     border-radius: 50%;
     padding: 0.5em;
@@ -48,14 +48,55 @@ hr {
     text-align: center;
 }
 
-#plug_panel {
+.select_panel {
     display: flex;
 }
 
-#pair_select {
+.pair_select {
     display: flex;
     flex-direction: column;
     gap: 1em;
     border-left: 2px solid black;
     padding-left: 1em;
+}
+
+.pair_select > h3 {
+    text-align: center;
+}
+
+#rotor_select {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.rotor_option {
+    display: flex;
+    gap: 1em;
+}
+
+.rotor_display {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rotor_display > * {
+    border: 2px solid lightgray;
+    padding: 0.5em;
+    background-color: black;
+    color: white;
+    width: 2em;
+    text-align: center;
+}
+
+#canType {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
+#canType > p {
+    word-wrap: break-word;
 }
