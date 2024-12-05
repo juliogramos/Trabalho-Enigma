@@ -21,7 +21,7 @@ hr {
     width: 100%;
 }
 
-#lampboard {
+#lampboard, #plugboard {
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
@@ -35,4 +35,27 @@ hr {
     color: white;
     width: 2em;
     text-align: center;
+}
+
+#plugboard > * {
+    border: 5px solid black;
+    border-radius: 50%;
+    padding: 0.5em;
+    background-color: black;
+    color: white;
+    width: 3em;
+    height: 3em;
+    text-align: center;
+}
+
+#plug_panel {
+    display: flex;
+}
+
+#pair_select {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    border-left: 2px solid black;
+    padding-left: 1em;
 }

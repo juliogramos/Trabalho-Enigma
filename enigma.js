@@ -93,6 +93,111 @@ try {
 }
 
 // HTML do navegador
+
+//CRIAÇÃO DINÂMICA
+//Plugboard e lampboard
+const lampboard = document.getElementById("lampboard");
+const plugboard = document.getElementById("plugboard");
+for (let letter of alphabet) {
+    new_lamp = document.createElement("div");
+    new_lamp.id = "lamp_" + letter;
+    new_lamp.innerHTML = letter;
+    lampboard.appendChild(new_lamp);
+
+    new_plug = document.createElement("div");
+    new_plug.id = "plug_" + letter;
+    new_plug.innerHTML = letter;
+    plugboard.appendChild(new_plug);
+}
+
+//Seletores do plugboard
+const pair_select_1 = document.getElementById("pair_1");
+const pair_select_2 = document.getElementById("pair_2");
+for (let letter of alphabet) {
+    new_option_1 = document.createElement("option");
+    new_option_1.setAttribute("value", letter);
+    new_option_1.innerHTML = letter;
+    pair_select_1.appendChild(new_option_1);
+    
+    new_option_2= document.createElement("option");
+    new_option_2.setAttribute("value", letter);
+    new_option_2.innerHTML = letter;
+    pair_select_2.appendChild(new_option_2);
+}
+
+//PLUGBOARD
+// Define cores
+colors = [
+    {"color":"#e6194B", "in_use": false},
+    {"color":"#f58231", "in_use": false},
+    {"color":"#ffe119", "in_use": false},
+    {"color":"#bfef45", "in_use": false},
+    {"color":"#3cb44b", "in_use": false},
+    {"color":"#42d4f4", "in_use": false},
+    {"color":"#4363d8", "in_use": false},
+    {"color":"#4363d8", "in_use": false},
+    {"color":"#911eb4", "in_use": false},
+    {"color":"#f032e6", "in_use": false},
+    {"color":"#800000", "in_use": false},
+    {"color":"#9A6324", "in_use": false},
+    {"color":"#808000", "in_use": false}
+];
+
+//Inicializa pares
+let pairs = {};
+for (let letter of alphabet) {
+    pairs[letter] = "";
+}
+
+//Seletor de pares
+function connectPair() {
+    const pair_select_1 = document.getElementById("pair_1");
+    const pair_select_2 = document.getElementById("pair_2");
+    const value_1 = pair_select_1.value;
+    const value_2 = pair_select_2.value;
+    if (pairs[value_1] == "" && pairs[value_2] == "") {
+        if (value_1 == value_2) {
+            alert("Não é possível selecionar a mesma letra!");
+            return;
+        }
+        pairs[value_1] = value_2;
+        pairs[value_2] = value_1;
+        for (let color of colors) {
+            if (color["in_use"] == false) {
+                console.log("entrou")
+                const plug_1 = document.getElementById("plug_" + value_1);
+                const plug_2 = document.getElementById("plug_" + value_2);
+                plug_1.style.borderColor = color["color"];
+                plug_2.style.borderColor = color["color"];
+                color["in_use"] = true;
+                console.log(pairs);
+                console.log(colors);
+                return;
+            }
+        }
+    } else {
+        alert("Par já selecionado! Limpe os pares para redefinir este par.")
+    }
+}
+
+// Limpa os pares
+function resetPairs() {
+    for (let letter of alphabet) {
+        pairs[letter] = "";
+        let plug = document.getElementById("plug_" + letter);
+        plug.style.borderColor = "#000000";
+    }
+
+    for (let color of colors) {
+        color["in_use"] = false;
+    }
+
+    console.log(pairs);
+    console.log(colors);
+}
+
+// LAMPBOARD
+// Digitar
 let lastInputLength = 0;
 const input = document.getElementById("msg_input");
 input.addEventListener("input", function(e) {
@@ -105,14 +210,15 @@ input.addEventListener("input", function(e) {
     updateLampboard(newLetter);
 });
 
+// Acender lampboard
 function updateLampboard(char) {
     for (let letter of alphabet) {
         if (letter == char) {
-            let lampOn = document.getElementById(char);
+            let lampOn = document.getElementById("lamp_" + char);
             lampOn.style.backgroundColor = "#ffffe0";
             lampOn.style.color = "#000000";
         } else {
-            let lampOff = document.getElementById(letter);
+            let lampOff = document.getElementById("lamp_" + letter);
             lampOff.style.backgroundColor = "#000000";
             lampOff.style.color = "#ffffff";
         }
