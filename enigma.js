@@ -8,6 +8,13 @@ const rotors = [
     "BDFHJLCPRTXVZNYEIWGAKMUSQO".split("") // Rotor III
 ];
 
+const listOfNotchs = [
+    "Q", // Notch position for Rotor I
+    "E", // Notch position for Rotor II
+    "V"  // Notch position for Rotor III
+];
+
+
 let plugboardPairs = [];
 let reflectorPairs = [];
 let activeRotors = [];
@@ -108,8 +115,21 @@ function back_rotation(caracter) {
 	return currentChar;
 
 }
-function refletor_transformation(caracter) {}
-function rotor_increment(caracter) {}
+function refletor_transformation(caracter) {
+	for (const par of reflectorPairs) {
+		if (par[0] == caracter) {
+			return par[1];
+		}
+		if (par[1] == caracter) {
+			return par[0];
+		}
+	}
+	return caracter;
+}
+
+function rotor_increment(caracter) {
+
+}
 
 function cipher_message(message) {
 	let cyphertext = "";
@@ -121,13 +141,13 @@ function cipher_message(message) {
 		trans_char = frontal_rotation(trans_char);
 		console.log("After frontal rotation: " + trans_char);
 		
-		trans_char = refletor_transformation(trans_char);
-		console.log("After reflector: " + trans_char);
+	//	trans_char = refletor_transformation(trans_char);
+	//	console.log("After reflector: " + trans_char);
 
 		trans_char = back_rotation(trans_char);
 		console.log("After back rotation: " + trans_char);
 
-		cyphertext += plugboard_transformation(caracter);
+		cyphertext += plugboard_transformation(trans_char);
 		rotor_increment(trans_char);
 	}
 	
