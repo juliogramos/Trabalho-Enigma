@@ -64,7 +64,7 @@ hr {
     text-align: center;
 }
 
-#rotor_select {
+#rotor_select, #activeRotorStatus {
     display: flex;
     flex-direction: column;
     gap: 1em;

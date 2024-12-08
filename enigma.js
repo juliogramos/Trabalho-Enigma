@@ -1,7 +1,11 @@
 const allEqual = arr => arr.every(val => val === arr[0]);
 
-function shift_array(arr) {
+function shift_array_right(arr) {
     return arr.map((_, i, a) => a[(i + a.length - 1) % a.length]);
+}
+
+function shift_array_left(arr) {
+    return arr.map((_, i, a) => a[(i + 1) % a.length]);
 }
 
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""); // Corrigido a ordem do alfabeto
@@ -140,16 +144,13 @@ function frontal_rotation(caracter) {
 	return currentChar;
 }
 function back_rotation(caracter) {
-    let prevChar = caracter
     let currentChar = caracter;
-
+    console.log("teste")
 	for (let i = activeRotors.length - 1; i >= 0; i--) {
-		let  index = activeRotors.indexOf(currentChar);
-
+		let  index = activeRotors[i].indexOf(currentChar);
 		if (index !== -1) {
-            prevChar = currentChar;
 			currentChar = alphabet[index];
-            console.log(prevChar, " -> ", currentChar);
+            console.log("heee heee")
 		}
 	}
 	
@@ -169,36 +170,35 @@ function refletor_transformation(caracter) {
 }
 
 function rotor_increment() {
-    /*
-    let carry = true;
-
-	for (let i = activeRotors.length - 1; i >= 0; i--) {
-		if (!carry) break;
-
-		const rotor = activeRotors[i];
-		 console.log(`Rotor ${i} antes da rotação: ${rotor.join("")}`);
-		rotor.push(rotor.shift());
-	      console.log(`Rotor ${i} após a rotação: ${rotor.join("")}`);
-		const notch = listOfNotchs[i];
-		const notchIndex = alphabet.indexOf(notch);
-
-
-		carry = rotor[0] == alphabet[notchIndex];
-	}
-    */
    let index = 0
-   const maxIndex = activeRotors.length;
+   const maxIndex = activeRotors.length - 1;
     while (true) {
         console.log(`Rotor `, index, ` antes de rodar: `, activeRotors[index].join(``))
-        activeRotors[index] = shift_array(activeRotors[index]);
+        activeRotors[index] = shift_array_right(activeRotors[index]);
         console.log(`Rotor `, index, ` após rodar: `, activeRotors[index].join(``))
         if (activeRotors[index][0] == activeNotches[index]) {
             index ++;
-            if (index >= maxIndex) {index = 0;}
+            if (index > maxIndex) {break;}
         } else {
             break;
         }
     }
+}
+
+function rotor_decrement() {
+    let index = 0
+    const maxIndex = activeRotors.length - 1;
+     while (true) {
+         console.log(`Rotor `, index, ` antes de rodar: `, activeRotors[index].join(``))
+         activeRotors[index] = shift_array_left(activeRotors[index]);
+         console.log(`Rotor `, index, ` após rodar: `, activeRotors[index].join(``))
+         if (activeRotors[index][activeRotors[index].length-1] == activeNotches[index]) {
+             index ++;
+             if (index > maxIndex) {break;}
+         } else {
+             break;
+         }
+     }
 }
 
 function cipher_message(caracter) {
@@ -301,6 +301,41 @@ for (let rotor in rotors) {
     rotor_option.appendChild(rotor_checkbox);
 
     rotor_select.append(rotor_option);
+}
+
+function drawActiveRotors() {
+    const rotor_select = document.getElementById("activeRotorStatus");
+    for (let rotor in activeRotors) {
+        let rotor_div = document.createElement("div");
+        rotor_div.id = "active_rotor_" + rotor;
+        rotor_div.classList.add("rotor_display");
+        for (let letter of activeRotors[rotor]) {
+            let letter_div = document.createElement("div");
+            letter_div.innerHTML = letter;
+            if (letter == activeNotches[rotor]) {
+                letter_div.style.color = "#ff0000"
+            } else {
+                letter_div.style.color = "#ffffff"
+            }
+            rotor_div.appendChild(letter_div);
+        }
+        rotor_select.appendChild(rotor_div);
+    }
+}
+
+function updateActiveRotors() {
+    for (let rotor in activeRotors) {
+        const rotorDiv = document.getElementById("active_rotor_" + rotor);
+        let letterDivs = rotorDiv.childNodes;
+        for (let letterIndex = 0; letterIndex < letterDivs.length; letterIndex++) {
+            letterDivs[letterIndex].innerHTML = activeRotors[rotor][letterIndex]
+            if (activeRotors[rotor][letterIndex] == activeNotches[rotor]) {
+                letterDivs[letterIndex].style.color = "#ff0000";
+            } else {
+                letterDivs[letterIndex].style.color = "#ffffff";
+            }
+        }
+    }
 }
 
 //PLUGBOARD
@@ -471,6 +506,119 @@ function saveConfigs() {
         }
     }
 
+    // TESTE
+    reflectTuples = [
+        [
+          "A",
+          "B"
+        ],
+        [
+          "B",
+          "A"
+        ],
+        [
+          "C",
+          "D"
+        ],
+        [
+          "D",
+          "C"
+        ],
+        [
+          "E",
+          "F"
+        ],
+        [
+          "F",
+          "E"
+        ],
+        [
+          "G",
+          "H"
+        ],
+        [
+          "H",
+          "G"
+        ],
+        [
+          "I",
+          "J"
+        ],
+        [
+          "J",
+          "I"
+        ],
+        [
+          "K",
+          "L"
+        ],
+        [
+          "L",
+          "K"
+        ],
+        [
+          "M",
+          "N"
+        ],
+        [
+          "N",
+          "M"
+        ],
+        [
+          "O",
+          "P"
+        ],
+        [
+          "P",
+          "O"
+        ],
+        [
+          "Q",
+          "R"
+        ],
+        [
+          "R",
+          "Q"
+        ],
+        [
+          "S",
+          "T"
+        ],
+        [
+          "T",
+          "S"
+        ],
+        [
+          "U",
+          "V"
+        ],
+        [
+          "V",
+          "U"
+        ],
+        [
+          "W",
+          "X"
+        ],
+        [
+          "X",
+          "W"
+        ],
+        [
+          "Y",
+          "Z"
+        ],
+        [
+          "Z",
+          "Y"
+        ]
+      ]
+
+    if (reflectTuples.length < 13) {
+        alert("Preencha todo o refletor!")
+        return;
+    }
+
     let rotormsg;
     let plugmsg;
     let reflectmsg;
@@ -486,39 +634,36 @@ function saveConfigs() {
         return;
     }
 
-    const whichRotors = document.getElementById("whichRotors");
-    const whichPlugs = document.getElementById("whichPlugs");
-    const whichReflects = document.getElementById("whichReflects");
-
-    whichRotors.innerHTML = rotormsg;
-    whichPlugs.innerHTML = plugmsg;
-    whichReflects.innerHTML = reflectmsg;
-
     const canType = document.getElementById("canType");
     canType.style.display = "flex";
+
+    drawActiveRotors()
+
+    console.log(reflectTuples)
 }
 
-// LAMPBOARD
-// Digitar
+// LOGICA PRINCIPAL DO PROGRAMA
 let lastInputLength = 0;
 const input = document.getElementById("msg_input");
 input.addEventListener("input", function(e) {
-    // Mudar tudo isso pra caso deletar mais que uma letra de uma vez
-    // Ou só avisar que quebra se der ctrl v
     let output = document.getElementById("cifrada");
     let newLetter;
     if (lastInputLength > input.value.length) {
         output.textContent = output.textContent.substring(0, output.textContent.length - 1)
-        console.log("Apagou")
+        rotor_decrement();
     } else {
         let lastChar = input.value.slice(-1);
         if (alphabet.includes(lastChar.toUpperCase())) {
             newLetter = cipher_message(lastChar.toUpperCase());
             output.textContent += newLetter;
+        } else {
+            output.textContent += lastChar;
+            rotor_increment();
         }
     }
     lastInputLength = input.value.length;
     updateLampboard(newLetter);
+    updateActiveRotors();
 });
 
 // Acender lampboard
@@ -534,30 +679,4 @@ function updateLampboard(char) {
             lampOff.style.color = "#ffffff";
         }
     }
-}
-
-//Fazer
-// function encryptButton() {
-    // Resetar as rotações dos rotores aqui pois o input vai modificar elas
-    //  quando digitar uma letra
-    // alert("Clicou");
-
-    //const input = document.getElementById("msg_input").value.toUpperCase();
-   // const output = [];
-
-    //let output = cipher_message(input);
-    //document.getElementById("cifrada").textContent = output;
-    //const outputElement = document.getElementById("output");
-    //if (outputElement) {
-	//    outputElement.textContent = output;
-    //} else {
-	//    console.log("Mensagem cifrada: ", output);
-    //}
-//}
-
-// Vai trabalhar só com letras maiúsculas
-// Assume que as letras passadas pra ela são maiúsculas (e letras)
-function encryptLetter(char) {
-	// Implementar certo
-    return char;
 }

@@ -19,7 +19,7 @@
                 <!-- Vai ser criado dinâmicamente -->
             </div>
             <div id="plug_pair_select" class="pair_select">
-                <h3>Selecione os pares</h3>
+                <h3>Selecione 0-13 pares</h3>
                 <select id="plug_pair_1">Letra 1</select>
                 <select id="plug_pair_2">Letra 2</select>
                 <button type="button" onclick="plugConnectPair()">Conectar</button>
@@ -35,7 +35,7 @@
                 <!-- Vai ser criado dinâmicamente -->
             </div>
             <div id="reflect_pair_select" class="pair_select">
-                <h3>Selecione os pares</h3>
+                <h3>Selecione 13 pares</h3>
                 <select id="reflect_pair_1">Letra 1</select>
                 <select id="reflect_pair_2">Letra 2</select>
                 <button type="button" onclick="reflectConnectPair()">Conectar</button>
@@ -58,13 +58,13 @@
 
         <div id="canType">
             <h2>Configurações salvas!</h2>
-            <p id="whichRotors"></p>
-            <p id="whichPlugs"></p>
-            <p id="whichReflects"></p>
-            <hr>
 
             <h2>Digite a sua mensagem abaixo:</h2>
             <input type="text" id="msg_input">
+
+            <hr>
+            <h2>Estado dos rotores</h2>
+            <div id="activeRotorStatus"></div>
 
             <hr>
 
