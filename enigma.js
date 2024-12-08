@@ -1,5 +1,9 @@
 const allEqual = arr => arr.every(val => val === arr[0]);
 
+function shift_array(arr) {
+    return arr.map((_, i, a) => a[(i + a.length - 1) % a.length]);
+}
+
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""); // Corrigido a ordem do alfabeto
 
 const rotors = [
@@ -13,6 +17,8 @@ const listOfNotchs = [
     "E", // Notch position for Rotor II
     "V"  // Notch position for Rotor III
 ];
+
+let activeNotches = [];
 
 let plugboardPairs = [];
 let reflectorPairs = [];
@@ -93,6 +99,20 @@ function setActiveRotors(order) {
     return "Rotores ativos configurados: " + activeRotors.map(r => r.join(""));
 }
 
+function setActiveNotches(rotorBoolList) {
+    if (rotorBoolList[0] == true) {
+        activeNotches.push(listOfNotchs[0]);
+    }
+
+    if (rotorBoolList[1] == true) {
+        activeNotches.push(listOfNotchs[1]);
+    }
+
+    if (rotorBoolList[2] == true) {
+        activeNotches.push(listOfNotchs[2]);
+    }
+}
+
 function plugboard_transformation(caracter) {
 	for (const par of plugboardPairs) {
 		if (par[0] == caracter) {
@@ -108,25 +128,28 @@ function plugboard_transformation(caracter) {
 function frontal_rotation(caracter) {
 	let currentChar = caracter;
 
-	for (let i = 0; i < rotors.length; i++) {
+	for (let i = 0; i < activeRotors.length; i++) {
 		let  index = alphabet.indexOf(currentChar);
 
 		if (index !== -1) {
-			currentChar = rotors[i][index];
+			currentChar = activeRotors[i][index];
+            console.log(caracter, " -> ", currentChar);
 		}
 	}
 	
 	return currentChar;
 }
 function back_rotation(caracter) {
-	let currentChar = caracter;
+    let prevChar = caracter
+    let currentChar = caracter;
 
-	for (let i = rotors.length - 1; i >= 0; i--) {
-		const rotor = activeRotors[i];
-		let  index = rotors.indexOf(currentChar);
+	for (let i = activeRotors.length - 1; i >= 0; i--) {
+		let  index = activeRotors.indexOf(currentChar);
 
 		if (index !== -1) {
+            prevChar = currentChar;
 			currentChar = alphabet[index];
+            console.log(prevChar, " -> ", currentChar);
 		}
 	}
 	
@@ -146,7 +169,8 @@ function refletor_transformation(caracter) {
 }
 
 function rotor_increment() {
-	let carry = true;
+    /*
+    let carry = true;
 
 	for (let i = activeRotors.length - 1; i >= 0; i--) {
 		if (!carry) break;
@@ -161,7 +185,20 @@ function rotor_increment() {
 
 		carry = rotor[0] == alphabet[notchIndex];
 	}
-
+    */
+   let index = 0
+   const maxIndex = activeRotors.length;
+    while (true) {
+        console.log(`Rotor `, index, ` antes de rodar: `, activeRotors[index].join(``))
+        activeRotors[index] = shift_array(activeRotors[index]);
+        console.log(`Rotor `, index, ` após rodar: `, activeRotors[index].join(``))
+        if (activeRotors[index][0] == activeNotches[index]) {
+            index ++;
+            if (index >= maxIndex) {index = 0;}
+        } else {
+            break;
+        }
+    }
 }
 
 function cipher_message(caracter) {
@@ -183,7 +220,7 @@ function cipher_message(caracter) {
     rotor_increment();
     console.log("After rotor increment: " + trans_char);
 
- resetRotors();
+    //resetRotors();
 	return trans_char;
 }
 
@@ -440,6 +477,7 @@ function saveConfigs() {
 
     try {
         rotormsg = setActiveRotors(selectedRotors);
+        setActiveNotches(trueRotors);
 	saveInitialRotorState();
         plugmsg = setPlugboardPairs(plugTuples);
         reflectmsg = setReflectorPairs(reflectTuples);
