@@ -131,27 +131,25 @@ function rotor_increment(caracter) {
 
 }
 
-function cipher_message(message) {
-	let cyphertext = "";
-	
-	for (const caracter of message) {
-		let trans_char = plugboard_transformation(caracter);
-		console.log("After plugboard: " + trans_char);
-		
-		trans_char = frontal_rotation(trans_char);
-		console.log("After frontal rotation: " + trans_char);
-		
-	//	trans_char = refletor_transformation(trans_char);
-	//	console.log("After reflector: " + trans_char);
+function cipher_message(caracter) {
 
-		trans_char = back_rotation(trans_char);
-		console.log("After back rotation: " + trans_char);
+    let trans_char = plugboard_transformation(caracter);
+    console.log("After plugboard: " + trans_char);
+    
+    trans_char = frontal_rotation(trans_char);
+    console.log("After frontal rotation: " + trans_char);
+    
+    trans_char = refletor_transformation(trans_char);
+    console.log("After reflector: " + trans_char);
 
-		cyphertext += plugboard_transformation(trans_char);
-		rotor_increment(trans_char);
-	}
+    trans_char = back_rotation(trans_char);
+    console.log("After back rotation: " + trans_char);
+
+    trans_char = plugboard_transformation(trans_char);
+    console.log("After second plugboard: " + trans_char);
+    rotor_increment(trans_char);
 	
-	return cyphertext;
+	return trans_char;
 }
 
 // HTML do navegador
@@ -308,7 +306,7 @@ reflect_colors = [
     {"color":"#3cb44b", "in_use": false},
     {"color":"#42d4f4", "in_use": false},
     {"color":"#4363d8", "in_use": false},
-    {"color":"#4363d8", "in_use": false},
+    {"color":"#ffffff", "in_use": false},
     {"color":"#911eb4", "in_use": false},
     {"color":"#f032e6", "in_use": false},
     {"color":"#800000", "in_use": false},
@@ -431,12 +429,21 @@ function saveConfigs() {
 let lastInputLength = 0;
 const input = document.getElementById("msg_input");
 input.addEventListener("input", function(e) {
-    lastInputLength = input.value.length;
-    let lastChar = input.value.slice(-1);
+    // Mudar tudo isso pra caso deletar mais que uma letra de uma vez
+    // Ou só avisar que quebra se der ctrl v
+    let output = document.getElementById("cifrada");
     let newLetter;
-    if (alphabet.includes(lastChar.toUpperCase())) {
-        newLetter = encryptLetter(lastChar.toUpperCase());
+    if (lastInputLength > input.value.length) {
+        output.textContent = output.textContent.substring(0, output.textContent.length - 1)
+        console.log("Apagou")
+    } else {
+        let lastChar = input.value.slice(-1);
+        if (alphabet.includes(lastChar.toUpperCase())) {
+            newLetter = cipher_message(lastChar.toUpperCase());
+            output.textContent += newLetter;
+        }
     }
+    lastInputLength = input.value.length;
     updateLampboard(newLetter);
 });
 
@@ -456,23 +463,23 @@ function updateLampboard(char) {
 }
 
 //Fazer
-function encryptButton() {
+// function encryptButton() {
     // Resetar as rotações dos rotores aqui pois o input vai modificar elas
     //  quando digitar uma letra
-    alert("Clicou");
+    // alert("Clicou");
 
-    const input = document.getElementById("msg_input").value.toUpperCase();
+    //const input = document.getElementById("msg_input").value.toUpperCase();
    // const output = [];
 
-    let output = cipher_message(input);
-    document.getElementById("cifrada").textContent = output;
-    const outputElement = document.getElementById("output");
-    if (outputElement) {
-	    outputElement.textContent = output;
-    } else {
-	    console.log("Mensagem cifrada: ", output);
-    }
-}
+    //let output = cipher_message(input);
+    //document.getElementById("cifrada").textContent = output;
+    //const outputElement = document.getElementById("output");
+    //if (outputElement) {
+	//    outputElement.textContent = output;
+    //} else {
+	//    console.log("Mensagem cifrada: ", output);
+    //}
+//}
 
 // Vai trabalhar só com letras maiúsculas
 // Assume que as letras passadas pra ela são maiúsculas (e letras)
