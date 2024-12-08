@@ -14,10 +14,27 @@ const listOfNotchs = [
     "V"  // Notch position for Rotor III
 ];
 
-
 let plugboardPairs = [];
 let reflectorPairs = [];
 let activeRotors = [];
+
+let initialRotorState = [];
+
+function saveInitialRotorState() {
+    initialRotorState = activeRotors.map(rotor => [...rotor]);
+}
+
+function resetRotors() {
+    if (initialRotorState.length === 0) {
+        return;
+    }
+
+    // Restaura o estado inicial dos rotores
+    for (let i = 0; i < activeRotors.length; i++) {
+        activeRotors[i] = [...initialRotorState[i]];
+    }
+
+}
 
 /**
  * Define os pares para o plugboard.
@@ -105,7 +122,8 @@ function back_rotation(caracter) {
 	let currentChar = caracter;
 
 	for (let i = rotors.length - 1; i >= 0; i--) {
-		let  index = rotors[i].indexOf(currentChar);
+		const rotor = activeRotors[i];
+		let  index = rotors.indexOf(currentChar);
 
 		if (index !== -1) {
 			currentChar = alphabet[index];
@@ -127,7 +145,22 @@ function refletor_transformation(caracter) {
 	return caracter;
 }
 
-function rotor_increment(caracter) {
+function rotor_increment() {
+	let carry = true;
+
+	for (let i = activeRotors.length - 1; i >= 0; i--) {
+		if (!carry) break;
+
+		const rotor = activeRotors[i];
+		 console.log(`Rotor ${i} antes da rotação: ${rotor.join("")}`);
+		rotor.push(rotor.shift());
+	      console.log(`Rotor ${i} após a rotação: ${rotor.join("")}`);
+		const notch = listOfNotchs[i];
+		const notchIndex = alphabet.indexOf(notch);
+
+
+		carry = rotor[0] == alphabet[notchIndex];
+	}
 
 }
 
@@ -147,8 +180,10 @@ function cipher_message(caracter) {
 
     trans_char = plugboard_transformation(trans_char);
     console.log("After second plugboard: " + trans_char);
-    rotor_increment(trans_char);
-	
+    rotor_increment();
+    console.log("After rotor increment: " + trans_char);
+
+ resetRotors();
 	return trans_char;
 }
 
@@ -405,6 +440,7 @@ function saveConfigs() {
 
     try {
         rotormsg = setActiveRotors(selectedRotors);
+	saveInitialRotorState();
         plugmsg = setPlugboardPairs(plugTuples);
         reflectmsg = setReflectorPairs(reflectTuples);
     } catch(error) {
