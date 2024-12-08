@@ -680,3 +680,9 @@ function updateLampboard(char) {
         }
     }
 }
+
+
+function refreshPage(){
+    window.location.reload();
+} 
+
