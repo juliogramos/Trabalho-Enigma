@@ -186,8 +186,10 @@ function updateActiveRotors() {
             letterDivs[letterIndex].innerHTML = activeRotors[rotor][letterIndex]
             if (activeRotors[rotor][letterIndex] == activeNotches[rotor]) {
                 letterDivs[letterIndex].style.color = "#ff0000";
+                letterDivs[letterIndex].style.borderColor = "#ff0000";
             } else {
                 letterDivs[letterIndex].style.color = "#ffffff";
+                letterDivs[letterIndex].style.borderColor = "#D3D3D3";
             }
         }
     }
