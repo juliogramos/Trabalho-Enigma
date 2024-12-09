@@ -89,6 +89,14 @@ hr {
     text-align: center;
 }
 
+#configs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1em;
+}
+
 #canType {
     display: none;
     justify-content: center;
