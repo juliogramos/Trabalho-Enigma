@@ -291,7 +291,31 @@ function updateLampboard(char) {
 // Recarrega página
 function refreshPage(){
     window.location.reload();
-} 
+}
+
+// Registra o log
+let log_plug_1 = document.getElementById("log_plug_1");
+let log_rot_1 = document.getElementById("log_rot_1");
+let log_ref = document.getElementById("log_ref");
+let log_rot_2 = document.getElementById("log_rot_2");
+let log_plug_2 = document.getElementById("log_plug_2");
+
+function updateLog(log) {
+    log_plug_1.innerHTML = "Plugboard: " + log["inicial"] + " -> " + log["plugboard_entry"];
+    log_rot_1.innerHTML = "Rotores: " + log["frontal_transforms"].join(" -> ");
+    log_ref.innerHTML = "Refletor: " + log["frontal_transforms"][log["frontal_transforms"].length - 1] + " -> " + log["reflector"];
+    log_rot_2.innerHTML = "Rotores: " + log["backward_transforms"].join(" -> ");
+    log_plug_2.innerHTML = "Plugboard: " + log["backward_transforms"][log["backward_transforms"].length - 1] + " -> " + log["plugboard_exit"];
+}
+
+// Limpa o log
+function clearLog() {
+    log_plug_1.innerHTML = "Plugboard: ";
+    log_rot_1.innerHTML = "Rotores: ";
+    log_ref.innerHTML = "Refletor: ";
+    log_rot_2.innerHTML = "Rotores: ";
+    log_plug_2.innerHTML = "Plugboard: ";
+}
 
 // CONFIGURAÇÕES
 function saveInitialRotorState() {
@@ -307,7 +331,6 @@ function resetRotors() {
     for (let i = 0; i < activeRotors.length; i++) {
         activeRotors[i] = [...initialRotorState[i]];
     }
-
 }
 
 /**
@@ -419,7 +442,7 @@ function saveConfigs() {
         }
     }
 
-    // TESTE
+    /* TESTE
     reflectTuples = [
         ["A", "B"],
         ["B", "A"],
@@ -448,6 +471,7 @@ function saveConfigs() {
         ["Y", "Z"],
         ["Z", "Y"]
       ]
+    */
 
     if (reflectTuples.length < 13) {
         alert("Preencha todo o refletor!")
@@ -491,33 +515,32 @@ function plugboard_transformation(caracter) {
 // Ida pelos rotores
 function frontal_rotation(caracter) {
 	let currentChar = caracter;
+    let transformations = [caracter];
 
 	for (let i = 0; i < activeRotors.length; i++) {
 		let  index = alphabet.indexOf(currentChar);
 
 		if (index !== -1) {
 			currentChar = activeRotors[i][index];
-            console.log(caracter, " -> ", currentChar);
+            transformations.push(currentChar)
 		}
 	}
-	
-	return currentChar;
+	return transformations;
 }
 
 // Volta pelos rotores
 function back_rotation(caracter) {
     let currentChar = caracter;
-    console.log("teste")
+    let transformations = [caracter];
+
 	for (let i = activeRotors.length - 1; i >= 0; i--) {
 		let  index = activeRotors[i].indexOf(currentChar);
 		if (index !== -1) {
 			currentChar = alphabet[index];
-            console.log("heee heee")
+            transformations.push(currentChar);
 		}
 	}
-	
-	return currentChar;
-
+	return transformations;
 }
 
 // Transformação do refletor
@@ -569,67 +592,60 @@ function rotor_decrement() {
 
 // Processo completo de funcionamento
 function cipher_message(caracter) {
+    let log = {};
+    log["inicial"] = caracter;
+
     let trans_char = plugboard_transformation(caracter);
+    log["plugboard_entry"] = trans_char;
     console.log("After plugboard: " + trans_char);
     
-    trans_char = frontal_rotation(trans_char);
+    frontal_transforms = frontal_rotation(trans_char);
+    trans_char = frontal_transforms[frontal_transforms.length - 1];
+    log["frontal_transforms"] = frontal_transforms;
     console.log("After frontal rotation: " + trans_char);
     
     trans_char = refletor_transformation(trans_char);
+    log["reflector"] = trans_char;
     console.log("After reflector: " + trans_char);
 
-    trans_char = back_rotation(trans_char);
+    backward_transforms = back_rotation(trans_char);
+    trans_char = backward_transforms[backward_transforms.length - 1];
+    log["backward_transforms"] = backward_transforms;
     console.log("After back rotation: " + trans_char);
 
     trans_char = plugboard_transformation(trans_char);
+    log["plugboard_exit"] = trans_char;
     console.log("After second plugboard: " + trans_char);
-    rotor_increment();
-    console.log("After rotor increment: " + trans_char);
 
-    //resetRotors();
-	return trans_char;
+    rotor_increment();
+
+	return log;
 }
 
 // LOGICA PRINCIPAL DO PROGRAMA
-let encryptedMessages = [];
 let lastInputLength = 0;
 const input = document.getElementById("msg_input");
 let output = document.getElementById("cifrada");
-const savedMessagesList = document.getElementById("savedMessages");
 
 input.addEventListener("input", function(e) {
     let newLetter;
     if (lastInputLength > input.value.length) {
         output.textContent = output.textContent.substring(0, output.textContent.length - 1)
         rotor_decrement();
+        clearLog();
     } else {
         let lastChar = input.value.slice(-1);
         if (alphabet.includes(lastChar.toUpperCase())) {
-            newLetter = cipher_message(lastChar.toUpperCase());
+            let log = cipher_message(lastChar.toUpperCase());
+            newLetter = log["plugboard_exit"]
             output.textContent += newLetter;
+            updateLog(log);
         } else {
             output.textContent += lastChar;
             rotor_increment();
         }
     }
     lastInputLength = input.value.length;
-
-    if (lastInputLength > 0 && output.textContent !== "") {
-        console.log("entrou");
-	encryptedMessages.push(output.textContent);  
-        updateSavedMessages(); 
-    }
     updateLampboard(newLetter);
     updateActiveRotors();
 });
-
-function updateSavedMessages() {
-    savedMessagesList.innerHTML = "";
-    console.log("aa");
-    encryptedMessages.forEach((msg) => {
-	console.log("msg = ", msg);
-        const listItem = document.createElement("li");
-        listItem.textContent = msg;
-        savedMessagesList.appendChild(listItem);
-    });
-}
