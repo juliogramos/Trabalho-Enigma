@@ -288,6 +288,11 @@ function updateLampboard(char) {
     }
 }
 
+// Recarrega página
+function refreshPage(){
+    window.location.reload();
+} 
+
 // CONFIGURAÇÕES
 function saveInitialRotorState() {
     initialRotorState = activeRotors.map(rotor => [...rotor]);
