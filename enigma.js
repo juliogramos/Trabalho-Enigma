@@ -78,7 +78,7 @@ reflect_colors = [
 ];
 
 // CRIAÇÃO DE ELEMENTOS
-// Plugboard, refletor e lampboard
+// Criação dinâmica do plugboard, refletor e lampboard
 const lampboard = document.getElementById("lampboard");
 const plugboard = document.getElementById("plugboard");
 const relector = document.getElementById("reflector");
@@ -277,6 +277,61 @@ function reflectResetPairs() {
     }
 }
 
+// Botão que preenche o refletor com valores padrão
+// (Também limpa a seleção atual)
+function defaultReflector() {
+    let reflectTuples = [
+        ["A", "B"],
+        ["B", "A"],
+        ["C", "D"],
+        ["D", "C"],
+        ["E", "F"],
+        ["F", "E"],
+        ["G", "H"],
+        ["H", "G"],
+        ["I", "J"],
+        ["J", "I"],
+        ["K", "L"],
+        ["L", "K"],
+        ["M", "N"],
+        ["N", "M"],
+        ["O", "P"],
+        ["P", "O"],
+        ["Q", "R"],
+        ["R", "Q"],
+        ["S", "T"],
+        ["T", "S"],
+        ["U", "V"],
+        ["V", "U"],
+        ["W", "X"],
+        ["X", "W"],
+        ["Y", "Z"],
+        ["Z", "Y"]
+    ];
+    reflectResetPairs()
+    let usedLetters = [];
+    for (let tuple of reflectTuples) {
+        if (usedLetters.includes(tuple[0]) || usedLetters.includes(tuple[1])) {
+            continue;
+        }
+        reflect_pairs[tuple[0]] = tuple[1];
+        reflect_pairs[tuple[1]] = tuple[0];
+        usedLetters.push(tuple[0]);
+        usedLetters.push(tuple[1]);
+        for (let color of reflect_colors) {
+            if (color["in_use"] == false) {
+                const reflect_1 = document.getElementById("reflect_" + tuple[0]);
+                const reflect_2 = document.getElementById("reflect_" + tuple[1]);
+                reflect_1.style.borderColor = color["color"];
+                reflect_2.style.borderColor = color["color"];
+                color["in_use"] = true;
+                break;
+            }
+        }
+    }
+    console.log(reflect_colors)
+}
+
 // Acender lampboard
 function updateLampboard(char) {
     for (let letter of alphabet) {
@@ -446,36 +501,7 @@ function saveConfigs() {
         }
     }
 
-    /* TESTE
-    reflectTuples = [
-        ["A", "B"],
-        ["B", "A"],
-        ["C", "D"],
-        ["D", "C"],
-        ["E", "F"],
-        ["F", "E"],
-        ["G", "H"],
-        ["H", "G"],
-        ["I", "J"],
-        ["J", "I"],
-        ["K", "L"],
-        ["L", "K"],
-        ["M", "N"],
-        ["N", "M"],
-        ["O", "P"],
-        ["P", "O"],
-        ["Q", "R"],
-        ["R", "Q"],
-        ["S", "T"],
-        ["T", "S"],
-        ["U", "V"],
-        ["V", "U"],
-        ["W", "X"],
-        ["X", "W"],
-        ["Y", "Z"],
-        ["Z", "Y"]
-      ]
-    */
+    console.log(reflect_pairs);
 
     if (reflectTuples.length < 13) {
         alert("Preencha todo o refletor!")
