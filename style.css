@@ -107,4 +107,5 @@ hr {
 
 #canType > p {
     word-wrap: break-word;
+    word-break: break-all;
 }
