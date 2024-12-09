@@ -591,10 +591,13 @@ function cipher_message(caracter) {
 }
 
 // LOGICA PRINCIPAL DO PROGRAMA
+let encryptedMessages = [];
 let lastInputLength = 0;
 const input = document.getElementById("msg_input");
+let output = document.getElementById("cifrada");
+const savedMessagesList = document.getElementById("savedMessages");
+
 input.addEventListener("input", function(e) {
-    let output = document.getElementById("cifrada");
     let newLetter;
     if (lastInputLength > input.value.length) {
         output.textContent = output.textContent.substring(0, output.textContent.length - 1)
@@ -610,6 +613,23 @@ input.addEventListener("input", function(e) {
         }
     }
     lastInputLength = input.value.length;
+
+    if (lastInputLength > 0 && output.textContent !== "") {
+        console.log("entrou");
+	encryptedMessages.push(output.textContent);  
+        updateSavedMessages(); 
+    }
     updateLampboard(newLetter);
     updateActiveRotors();
 });
+
+function updateSavedMessages() {
+    savedMessagesList.innerHTML = "";
+    console.log("aa");
+    encryptedMessages.forEach((msg) => {
+	console.log("msg = ", msg);
+        const listItem = document.createElement("li");
+        listItem.textContent = msg;
+        savedMessagesList.appendChild(listItem);
+    });
+}
