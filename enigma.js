@@ -167,8 +167,10 @@ function drawActiveRotors() {
             letter_div.innerHTML = letter;
             if (letter == activeNotches[rotor]) {
                 letter_div.style.color = "#ff0000"
+                letter_div.style.borderColor = "#ff0000";
             } else {
                 letter_div.style.color = "#ffffff"
+                letter_div.style.borderColor = "#D3D3D3";
             }
             rotor_div.appendChild(letter_div);
         }
@@ -597,25 +599,20 @@ function cipher_message(caracter) {
 
     let trans_char = plugboard_transformation(caracter);
     log["plugboard_entry"] = trans_char;
-    console.log("After plugboard: " + trans_char);
     
     frontal_transforms = frontal_rotation(trans_char);
     trans_char = frontal_transforms[frontal_transforms.length - 1];
     log["frontal_transforms"] = frontal_transforms;
-    console.log("After frontal rotation: " + trans_char);
     
     trans_char = refletor_transformation(trans_char);
     log["reflector"] = trans_char;
-    console.log("After reflector: " + trans_char);
 
     backward_transforms = back_rotation(trans_char);
     trans_char = backward_transforms[backward_transforms.length - 1];
     log["backward_transforms"] = backward_transforms;
-    console.log("After back rotation: " + trans_char);
 
     trans_char = plugboard_transformation(trans_char);
     log["plugboard_exit"] = trans_char;
-    console.log("After second plugboard: " + trans_char);
 
     rotor_increment();
 
